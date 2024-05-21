@@ -26,7 +26,6 @@ namespace MLS
         void (*action)(Button *button);
 
         ActionListener(void (*action)(Button *));
-        ActionListener(ActionListener const &action_listener);
 
         void action_performed(Button *) override;
     };

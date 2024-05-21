@@ -19,16 +19,13 @@ MLS::Board::Board(int width, int height) : mWidth(width), mHeight(height), width
       mTiles[x + y * width] = Tile(x, y, " "); 
     }
   }
-}
 
-MLS::Board::Board(Board const &board) : width(mWidth), height(mHeight)
-{
-  mWidth = board.mWidth;
-  mHeight = board.mHeight;
-  actual_player = board.actual_player;
-  mTiles = board.mTiles;
-  players[0] = board.players[0];
-  players[1] = board.players[1];
+  mW_height = 2 * height + 1;
+  mW_width = 5 * width + 1;
+  int console_width, console_height;
+  getmaxyx(stdscr, console_height, console_width);
+
+  window = ::subwin(stdscr, mW_height + 3, mW_width, (console_height - mW_height) / 2, (console_width - mW_width) / 2);
 }
 
 void MLS::Board::add_players(Player *p1, Player *p2)
@@ -85,16 +82,12 @@ bool MLS::Board::full() const
   return std::count_if(mTiles.begin(), mTiles.end(), [=](Tile const &t) { return t.token == " "; }) == 0;
 }
 
-::WINDOW *MLS::Board::get_window() const
+void MLS::Board::display()
 {
-  int w_height = 2 * height + 1;
-  int w_width = 5 * width + 1;
-  int console_width, console_height;
-  getmaxyx(stdscr, console_height, console_width);
+  if (window == nullptr) return;
 
-  ::WINDOW *win = ::subwin(stdscr, w_height + 3, w_width, (console_height - w_height) / 2, (console_width - w_width) / 2);
-
-  ::wbkgd(win, COLOR_PAIR(1));
+  ::wclear(window);
+  ::wbkgd(window, COLOR_PAIR(1));
 
   for (int x = 0; x < width; ++x)
   {
@@ -102,56 +95,54 @@ bool MLS::Board::full() const
     std::string str;
     if (x == selected_column)
     {
-      ::wattron(win, actual_player->tile.color);
+      ::wattron(window, COLOR_PAIR(actual_player->tile.color));
       str = "  v  ";
     }
     else
     {
       str = "  " + xstr + std::string(2 - xstr.size() + 1, ' ');
     }
-    ::wprintw(win, "%s", str.c_str());
-    ::wattroff(win, actual_player->tile.color);
+    ::wprintw(window, "%s", str.c_str());
+    ::wattroff(window, COLOR_PAIR(actual_player->tile.color));
   }
 
-  for (int y = 0; y < w_height; y++)
+  for (int y = 0; y < mW_height; y++)
   {
-    for (int x = 0; x < w_width; x++)
+    for (int x = 0; x < mW_width; x++)
     {
-      ::wmove(win, y + 2, x);
+      ::wmove(window, y + 2, x);
       if (y % 2 == 0)
       {
         if (x % 5 == 0)
         {
-          if (x == 0 and y == 0) ::wprintw(win, "+"); 
-          else if (x == 0 and y == w_height - 1) ::wprintw(win, "+"); 
-          else if (x == w_width - 1 and y == 0) ::wprintw(win, "+"); 
-          else if (x == w_width - 1 and y == w_height - 1) ::wprintw(win, "+"); 
-          else if (x == 0) ::wprintw(win, "|"); 
-          else if (x == w_width - 1) ::wprintw(win, "|"); 
-          else if (y == 0) ::wprintw(win, "-"); 
-          else if (y == w_height - 1)  ::wprintw(win, "-");  
-          else ::wprintw(win, "+");
+          if (x == 0 and y == 0) ::wprintw(window, "+"); 
+          else if (x == 0 and y == mW_height - 1) ::wprintw(window, "+"); 
+          else if (x == mW_width - 1 and y == 0) ::wprintw(window, "+"); 
+          else if (x == mW_width - 1 and y == mW_height - 1) ::wprintw(window, "+"); 
+          else if (x == 0) ::wprintw(window, "|"); 
+          else if (x == mW_width - 1) ::wprintw(window, "|"); 
+          else if (y == 0) ::wprintw(window, "-"); 
+          else if (y == mW_height - 1)  ::wprintw(window, "-");  
+          else ::wprintw(window, "+");
         }
-        else ::wprintw(win, "-");
+        else ::wprintw(window, "-");
       }
       else
       {
-        if (x % 5 == 0) ::wprintw(win, "|");
+        if (x % 5 == 0) ::wprintw(window, "|");
         else if (x % 5 == 2) 
         {
           int xx = (x - 1) / 5;
           int yy = (y - 1) / 2;
           Tile const &tile = mTiles[xx + yy * width];
-          ::wattron(win, COLOR_PAIR(tile.color));
-          ::wprintw(win, "%s", tile.token.c_str());
-          ::wattroff(win, COLOR_PAIR(tile.color));
+          ::wattron(window, COLOR_PAIR(tile.color));
+          ::wprintw(window, "%s", tile.token.c_str());
+          ::wattroff(window, COLOR_PAIR(tile.color));
         }
       }
     }
   } 
 
-  wrefresh(win);
-
-  return win;
+  wrefresh(window);
 }
 

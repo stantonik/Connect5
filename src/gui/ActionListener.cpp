@@ -12,11 +12,6 @@ MLS::GUI::ActionListener::ActionListener(void (*action)(Button *)) : action(acti
     
 }
 
-MLS::GUI::ActionListener::ActionListener(MLS::GUI::ActionListener const &action_listener)
-{
-  action = action_listener.action;
-}
-
 void MLS::GUI::ActionListener::action_performed(MLS::GUI::Button *button)
 {
   if (action) action(button);

@@ -33,7 +33,9 @@ void MLS::Connect5::init()
 
 void MLS::Connect5::run()
 {
-  WINDOW *window = ::subwin(::stdscr, 20, 60, 0, 0);
+  int console_width, console_height;
+  getmaxyx(stdscr, console_height, console_width);
+  WINDOW *window = ::subwin(::stdscr, 10, 60, (console_height - 10) / 2, (console_width - 60) / 2);
 
   panel.window = window;
   panel.title = "Board setting";
@@ -57,6 +59,7 @@ void MLS::Connect5::action_performed(MLS::GUI::Button *button)
   }
   else if (button->id == "OK")
   {
+    if (width == -1 || height == -1) return;
     panel.clear();
     panel.title = "Game type";
     panel.add(new GUI::Button("Player vs Player", &action_listener, "pvp"));
@@ -85,6 +88,7 @@ void MLS::Connect5::action_performed(MLS::GUI::Button *button)
     catch(...)
     {
       input->label = input->name + "please enter a size between 5 and 20";
+      width = -1;
     }
   }
   else if (button->id == "height")
@@ -98,12 +102,22 @@ void MLS::Connect5::action_performed(MLS::GUI::Button *button)
     catch(...)
     {
       input->label = input->name + "please enter a size between 5 and 20";
+      height = -1;
     }
   }
   else if (button->id == "p1" || button->id == "p2" || button->id == "random")
   {
     who_start = button->id; 
     play();
+
+    panel.title = "Board setting";
+
+    panel.clear();
+    panel.add(new GUI::TextInput("Width : ", std::to_string(width), &action_listener, "width"));
+    panel.add(new GUI::TextInput("Height: ", std::to_string(height), &action_listener, "height"));
+    panel.add(new GUI::Label(""));
+    panel.add(new GUI::Button("OK", &action_listener));
+    panel.add(new GUI::Button("Quit", &action_listener));
   }
 }
 
@@ -120,31 +134,35 @@ void MLS::Connect5::play()
   bool gameover = false;
   ::wclear(GUI::Panel::displayed->window);
 
+  board->display();
   while (!gameover)
   {
-    ::WINDOW *board_win = board->get_window();
-
     board->actual_player->move();
+    board->display();
 
     if (board->players[0]->winner())
     {
-      wprintw(board_win, "%s", std::string("\n" + board->players[0]->tile.token + " win !").c_str());
+      ::mvprintw(0, 0, "%s", std::string("\n" + board->players[0]->tile.token + " win !").c_str());
       gameover = true;
     }
     else if (board->players[1]->winner())
     {
-      wprintw(board_win, "%s", std::string("\n" + board->players[1]->tile.token + " win !").c_str());
+      ::mvprintw(0, 0, "%s", std::string("\n" + board->players[1]->tile.token + " win !").c_str());
       gameover = true;
     }
     else if (board->full())
     {
-      wprintw(board_win, "%s", std::string(std::string("\n") + "Tie !").c_str());
+      ::mvprintw(0, 0, "%s", std::string(std::string("\n") + "Tie !").c_str());
       gameover = true;
     }
+
+    ::wrefresh(board->window);
+    ::refresh();
     /* free(board_win); */
   }
 
   ::getch();
+  ::clear();
 }
 
 MLS::GUI::ActionListener MLS::Connect5::action_listener = GUI::ActionListener(action_performed);

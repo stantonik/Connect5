@@ -23,9 +23,9 @@ namespace MLS
       int selected_column = 0;
       Player *players[2];
       Player *actual_player;
+      ::WINDOW *window = nullptr;
 
       Board(int width, int height);
-      Board(Board const &board);
 
       friend Player;
 
@@ -35,10 +35,11 @@ namespace MLS
       bool full() const;
       std::vector<int> get_valid_moves() const;
       std::vector<Tile> get_alignement(int x, int y, int dx, int dy) const;
-      WINDOW *get_window() const;
+      void display();
 
     private:
       int mWidth, mHeight;
+      int mW_width, mW_height;
       std::vector<Tile> mTiles;
   };
 }

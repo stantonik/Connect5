@@ -40,8 +40,10 @@ namespace MLS
 
       friend Board;
 
+      void move(Board *, int) const;
       void move(int) const;
       void move() const;
+      int get_score(Board *) const;
       int get_score() const;
       bool winner() const;
 

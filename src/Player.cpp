@@ -23,18 +23,24 @@ MLS::Player::Player(Board *board) : pBoard(board), type(mType)
 
 }
 
-void MLS::Player::move(int column) const
+void MLS::Player::move(Board *board, int column) const
 {
-  for (int y = pBoard->height - 1; y >= 0; --y)
+  if (!board) return;
+  for (int y = board->height - 1; y >= 0; --y)
   {
-    if (pBoard->mTiles[column + y * pBoard->width].empty())
+    if (board->mTiles[column + y * board->width].empty())
     {
-      pBoard->mTiles[column + y * pBoard->width] = tile;
+      board->mTiles[column + y * board->width] = tile;
       break;
     }
   }
 
-  pBoard->actual_player = opponent;
+  board->actual_player = opponent;
+}
+
+void MLS::Player::move(int column) const
+{
+  move(pBoard, column);
 }
 
 void MLS::Player::move() const
@@ -44,16 +50,21 @@ void MLS::Player::move() const
 
 int MLS::Player::get_score() const
 {
+  return get_score(pBoard);
+}
+
+int MLS::Player::get_score(Board *board) const
+{
   int score = 0;
 
-  for (int y = 0; y < pBoard->height; ++y) 
+  for (int y = 0; y < board->height; ++y) 
   {
-    for (int x = 0; x < pBoard->width; ++x) 
+    for (int x = 0; x < board->width; ++x) 
     {
-      score += evaluate(pBoard->get_alignement(x, y, 1, 0));
-      score += evaluate(pBoard->get_alignement(x, y, 0, 1));
-      score += evaluate(pBoard->get_alignement(x, y, 1, 1));
-      score += evaluate(pBoard->get_alignement(x, y, 1, -1));
+      score += evaluate(board->get_alignement(x, y, 1, 0));
+      score += evaluate(board->get_alignement(x, y, 0, 1));
+      score += evaluate(board->get_alignement(x, y, 1, 1));
+      score += evaluate(board->get_alignement(x, y, 1, -1));
     }
   }
 
@@ -68,11 +79,11 @@ int MLS::Player::evaluate(std::vector<Tile> alignement) const
   int opponent_count = std::count_if(alignement.begin(), alignement.end(), [=](Tile const &t) { return t.token == opponent->tile.token; });
   int empty_count = std::count_if(alignement.begin(), alignement.end(), [=](Tile const &t) { return t.token == " "; });
 
-  if (player_count == 4 and empty_count == 1) score += 50;
+  if (player_count == 4 and empty_count == 1) score += 20;
   else if (player_count == 3 and empty_count == 2) score += 10;
   else if (player_count == 2 and empty_count == 3) score += 5;
 
-  if (opponent_count == 4 and empty_count == 1) score += -20;
+  if (opponent_count == 4 and empty_count == 1) score += -50;
 
   return score;
 }

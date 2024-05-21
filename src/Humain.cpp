@@ -36,5 +36,7 @@ int MLS::Humain::get_column() const
     {
       if (pBoard->is_valid_move(pBoard->selected_column)) return pBoard->selected_column;
     }
+
+    pBoard->display();
   }
 }
