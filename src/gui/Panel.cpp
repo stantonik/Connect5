@@ -20,7 +20,7 @@ void MLS::GUI::Panel::display(Panel *panel)
 
 MLS::GUI::Panel::Panel(WINDOW *window, std::string title) : window(window), title(title)
 {
- 
+
 }
 
 void MLS::GUI::Panel::add(MLS::GUI::Component *component)

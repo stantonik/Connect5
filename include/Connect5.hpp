@@ -7,11 +7,10 @@
 #ifndef CONNECT5_HPP
 #define CONNECT5_HPP
 
-#include "Board.hpp"
-
-#include "gui/ActionListener.hpp"
-#include "gui/Panel.hpp"
-#include "gui/TextInput.hpp"
+#include "../src/Board.hpp"
+#include "../src/gui/ActionListener.hpp"
+#include "../src/gui/Panel.hpp"
+#include "../src/gui/TextInput.hpp"
 
 #include <ncurses.h>
 #include <cstdlib>

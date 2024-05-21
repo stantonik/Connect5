@@ -5,4 +5,4 @@
 ######################################################################
 
 run:
-	g++ src/*.cpp src/gui/*.cpp -o bin/Connect5 -Iinclude -Isrc/gui -Isrc -lncurses -std=c++17
+	g++ src/*.cpp src/gui/*.cpp -o bin/Connect5 -Iinclude -lncurses -std=c++17

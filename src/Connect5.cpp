@@ -9,7 +9,7 @@
 
 MLS::Board *MLS::Connect5::board = nullptr;
 MLS::GUI::Panel MLS::Connect5::panel = MLS::GUI::Panel(stdscr, ""); 
-int MLS::Connect5::width = 0, MLS::Connect5::height = 0;
+int MLS::Connect5::width = 12, MLS::Connect5::height = 7;
 std::string MLS::Connect5::gametype = "";
 std::string MLS::Connect5::who_start = "";
 
@@ -25,8 +25,10 @@ void MLS::Connect5::init()
   keypad(stdscr, true);
 
   start_color();
-  init_pair(1, COLOR_WHITE, COLOR_BLACK);
-  init_pair(2, COLOR_BLACK, COLOR_WHITE);
+  init_pair(int(MLS::Color::WHITE), COLOR_WHITE, COLOR_BLACK);
+  init_pair(int(MLS::Color::BLACK), COLOR_BLACK, COLOR_WHITE);
+  init_pair(int(MLS::Color::RED), COLOR_RED, COLOR_BLACK);
+  init_pair(int(MLS::Color::YELLOW), COLOR_YELLOW, COLOR_BLACK);
 }
 
 void MLS::Connect5::run()
@@ -36,8 +38,8 @@ void MLS::Connect5::run()
   panel.window = window;
   panel.title = "Board setting";
 
-  panel.add(new GUI::TextInput("Width : ", "", &action_listener, "width"));
-  panel.add(new GUI::TextInput("Height: ", "", &action_listener, "height"));
+  panel.add(new GUI::TextInput("Width : ", std::to_string(width), &action_listener, "width"));
+  panel.add(new GUI::TextInput("Height: ", std::to_string(height), &action_listener, "height"));
   panel.add(new GUI::Label(""));
   panel.add(new GUI::Button("OK", &action_listener));
   panel.add(new GUI::Button("Quit", &action_listener));
@@ -124,6 +126,21 @@ void MLS::Connect5::play()
 
     board->actual_player->move();
 
+    if (board->players[0]->winner())
+    {
+      wprintw(board_win, "%s", std::string("\n" + board->players[0]->tile.token + " win !").c_str());
+      gameover = true;
+    }
+    else if (board->players[1]->winner())
+    {
+      wprintw(board_win, "%s", std::string("\n" + board->players[1]->tile.token + " win !").c_str());
+      gameover = true;
+    }
+    else if (board->full())
+    {
+      wprintw(board_win, "%s", std::string(std::string("\n") + "Tie !").c_str());
+      gameover = true;
+    }
     /* free(board_win); */
   }
 
