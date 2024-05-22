@@ -17,7 +17,8 @@ namespace MLS
     WHITE = 1,
     BLACK,
     RED,
-    YELLOW
+    YELLOW,
+    BLUE
   };
 
   class Tile

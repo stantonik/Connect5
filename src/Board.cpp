@@ -113,6 +113,7 @@ void MLS::Board::display()
       ::wmove(window, y + 2, x);
       if (y % 2 == 0)
       {
+        ::wattron(window, COLOR_PAIR(Color::BLUE));
         if (x % 5 == 0)
         {
           if (x == 0 and y == 0) ::wprintw(window, "+"); 
@@ -126,10 +127,16 @@ void MLS::Board::display()
           else ::wprintw(window, "+");
         }
         else ::wprintw(window, "-");
+        ::wattroff(window, COLOR_PAIR(Color::BLUE));
       }
       else
       {
-        if (x % 5 == 0) ::wprintw(window, "|");
+        if (x % 5 == 0)
+        {
+          ::wattron(window, COLOR_PAIR(Color::BLUE));
+          ::wprintw(window, "|");
+          ::wattroff(window, COLOR_PAIR(Color::BLUE));
+        }
         else if (x % 5 == 2) 
         {
           int xx = (x - 1) / 5;

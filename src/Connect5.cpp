@@ -29,6 +29,7 @@ void MLS::Connect5::init()
   init_pair(int(MLS::Color::BLACK), COLOR_BLACK, COLOR_WHITE);
   init_pair(int(MLS::Color::RED), COLOR_RED, COLOR_BLACK);
   init_pair(int(MLS::Color::YELLOW), COLOR_YELLOW, COLOR_BLACK);
+  init_pair(int(MLS::Color::BLUE), COLOR_BLUE, COLOR_BLACK);
 }
 
 void MLS::Connect5::run()
