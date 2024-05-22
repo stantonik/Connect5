@@ -34,7 +34,7 @@ void MLS::GUI::Panel::add(MLS::GUI::Component *component)
   scroll_down();
 }
 
-void MLS::GUI::Panel::remove(int line)
+void MLS::GUI::Panel::remove(size_t line)
 {
   if (line < 0 || line > components.size() - 1) return;
   delete components[line];

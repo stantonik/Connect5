@@ -37,7 +37,7 @@ namespace MLS
         static void display(Panel *);
         
         void add(Component *);
-        void remove(int);
+        void remove(size_t);
         void clear();
         void run();
         void display() const;
