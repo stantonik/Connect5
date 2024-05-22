@@ -7,14 +7,6 @@
 APP_NAME := Connect5
 CC := g++
 
-# DETECT PLATFORM
-ifeq ($(OS),Windows_NT)
-	detected_OS := Windows
-else
-	detected_OS := $(shell sh -c 'uname 2>/dev/null || echo Unknown')
-endif
-
-
 # VARIABLE PATH
 DSRC := src
 DBIN := bin
@@ -25,16 +17,19 @@ LIBS := -lncurses
 
 CFLAGS := -Wall -g -std=c++11
 
-SRCS := $(shell find $(DSRC) -type f -name '*.cpp')
-
-ifeq ($(detected_OS), Windows)
+# DETECT PLATFORM
+ifeq ($(OS),Windows_NT)
 	INC += -IC:\MinGW\include\ncurses
 	LIBS += -LC:\MinGW\lib
+	SRCS := $(shell where /r $(DSRC) *.cpp)
+	TARGET := $(DBIN)\$(APP_NAME).exe
+	DOBJ := $(DBIN)\obj
+else
+	SRCS := $(shell find $(DSRC) -type f -name '*.cpp')
+	TARGET := $(DBIN)/$(APP_NAME)
 endif
 
 .PHONY: all clean run
-
-TARGET := $(DBIN)/$(APP_NAME)
 
 run: $(TARGET)
 	$(TARGET)
