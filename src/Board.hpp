@@ -30,7 +30,6 @@ namespace MLS
       friend Player;
 
       void add_players(Player *, Player *);
-      void make_move();
       bool is_valid_move(int) const;
       bool full() const;
       std::vector<int> get_valid_moves() const;
