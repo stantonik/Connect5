@@ -18,7 +18,7 @@ MLS::Player::Player() : type(mType)
 
 }
 
-MLS::Player::Player(Board *board) : pBoard(board), type(mType)
+MLS::Player::Player(Board *board) : type(mType), pBoard(board)
 {
 
 }

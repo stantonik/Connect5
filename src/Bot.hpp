@@ -22,7 +22,7 @@ namespace MLS
 
     private:
       int get_column() const override;
-      std::pair<int, int> min_max(Board board, int depth, bool maximizing_player, int alpha, int beta) const;
+      std::pair<int, int> min_max(Board &board, int depth, bool maximizing_player, int alpha, int beta) const;
 
   };
 }

@@ -19,7 +19,7 @@ MLS::Bot::Bot(Board *board) : Player(board)
   mType = PlayerType::BOT;
 }
 
-std::pair<int, int> MLS::Bot::min_max(Board board, int depth, bool maximizing_player, int alpha, int beta) const
+std::pair<int, int> MLS::Bot::min_max(Board &board, int depth, bool maximizing_player, int alpha, int beta) const
 {
   if (depth == 0)
   {
@@ -32,8 +32,9 @@ std::pair<int, int> MLS::Bot::min_max(Board board, int depth, bool maximizing_pl
     int best_move = -1;
     for (int move : board.get_valid_moves())
     {
-      this->move(&board, move);
-      int eval_score = min_max(board, depth - 1, false, alpha, beta).second;
+      Board board_cp = board;
+      this->move(&board_cp, move);
+      int eval_score = min_max(board_cp, depth - 1, false, alpha, beta).second;
       if (eval_score > max_eval)
       {
         max_eval = eval_score;
@@ -50,8 +51,9 @@ std::pair<int, int> MLS::Bot::min_max(Board board, int depth, bool maximizing_pl
     int best_move = -1;
     for (int move : board.get_valid_moves())
     {
-      opponent->move(&board, move);
-      int eval_score = min_max(board, depth - 1, true, alpha, beta).second;
+      Board board_cp = board;
+      opponent->move(&board_cp, move);
+      int eval_score = min_max(board_cp, depth - 1, true, alpha, beta).second;
       if (eval_score < min_eval)
       {
         min_eval = eval_score;

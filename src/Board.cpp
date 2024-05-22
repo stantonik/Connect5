@@ -7,7 +7,7 @@
 #include "Board.hpp"
 
 
-MLS::Board::Board(int width, int height) : mWidth(width), mHeight(height), width(mWidth), height(mHeight)
+MLS::Board::Board(int width, int height) : width(mWidth), height(mHeight), mWidth(width), mHeight(height)
 {
   // Tiles init
   mTiles = std::vector<Tile>(width * height, Tile());

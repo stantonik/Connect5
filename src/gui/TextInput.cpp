@@ -17,15 +17,13 @@ void MLS::GUI::TextInput::action_performed(MLS::GUI::Button *button)
 {
   if (!panel) return;
 
-  int width, height;
-
   ::echo();
   ::curs_set(true);
 
   label = name;
   panel->display();
 
-  getmaxyx(panel->window, height, width);
+  int width = getmaxx(panel->window);
   ::wmove(panel->window, line + 2, (width + label.size()) / 2);
 
   char input[32];

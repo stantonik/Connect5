@@ -18,7 +18,7 @@ void MLS::GUI::Panel::display(Panel *panel)
 }
 
 
-MLS::GUI::Panel::Panel(WINDOW *window, std::string title) : window(window), title(title)
+MLS::GUI::Panel::Panel(WINDOW *window, std::string title) : title(title), window(window)
 {
 
 }
@@ -46,7 +46,13 @@ void MLS::GUI::Panel::remove(int line)
 
 void MLS::GUI::Panel::clear()
 {
-  /* for (Component *component : components) delete component; */
+
+  /* for (Component *component : components) */ 
+  /* { */
+  /*   delete component; */
+  /*   component = nullptr; */
+  /* } */
+
   components.clear();
   selected_line = 0;
 }
@@ -67,8 +73,7 @@ void MLS::GUI::Panel::display() const
 {
   if (!window) return;
 
-  int width, height;
-  getmaxyx(window, height, width);
+  int width = getmaxx(window);
 
   ::wbkgd(window, COLOR_PAIR(1));
   ::wclear(window);

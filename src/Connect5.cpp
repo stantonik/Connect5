@@ -123,6 +123,9 @@ void MLS::Connect5::action_performed(MLS::GUI::Button *button)
 
 void MLS::Connect5::play()
 {
+  free(panel.window);
+  panel.window = nullptr;
+
   board = new Board(width, height);
   if (gametype == "pvp") board->add_players(new Humain(), new Humain());
   else if (gametype == "pvb") board->add_players(new Humain(), new Bot());
@@ -158,7 +161,6 @@ void MLS::Connect5::play()
 
     ::wrefresh(board->window);
     ::refresh();
-    /* free(board_win); */
   }
 
   ::getch();

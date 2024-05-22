@@ -20,6 +20,8 @@ MLS::Humain::Humain(Board *board) : Player(board)
 
 int MLS::Humain::get_column() const
 {
+  ::flushinp();
+
   while(1)
   {
     int key = ::getch();
