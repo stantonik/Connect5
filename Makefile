@@ -29,7 +29,19 @@ else
 	TARGET := $(DBIN)/$(APP_NAME)
 endif
 
-.PHONY: all clean run
+# Exclude main.cpp for the debug target
+TEST_SRCS := $(filter-out $(DSRC)/main.cpp, $(SRCS))
+
+# Criterion Library Flags
+CRIT_INC := -I/usr/local/include
+CRIT_LIB := -L/usr/local/lib -lcriterion
+
+# Test sources
+TSRC := $(shell find tests -type f -name '*.cpp')
+
+.PHONY: all clean run debug
+
+all: $(TARGET)
 
 run: $(TARGET)
 	$(TARGET)
@@ -40,5 +52,10 @@ $(TARGET): $(DBIN)
 $(DBIN):
 	mkdir -p $(DBIN)
 
+debug: $(DBIN)/$(APP_NAME)_test
+
+$(DBIN)/$(APP_NAME)_test: $(DBIN)
+	$(CC) -o $@ $(TEST_SRCS) $(TSRC) $(CFLAGS) $(INC) $(CRIT_INC) $(LIBS) $(CRIT_LIB)
+
 clean:
-	rm $(TARGET)
+	rm -f $(TARGET) $(DBIN)/$(APP_NAME)_test

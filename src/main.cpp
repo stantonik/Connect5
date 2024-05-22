@@ -6,7 +6,7 @@
 
 #include "Connect5.hpp"
 
-
+#ifndef DEBUG
 int main()
 {
   MLS::Connect5::init();
@@ -14,3 +14,4 @@ int main()
 
   return 0;
 }
+#endif 
